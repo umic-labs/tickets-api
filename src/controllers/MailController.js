@@ -1,5 +1,6 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
+const MailService = require("../services/mail.service");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -9,18 +10,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-let mail = {
-  from: '"UMIC Brasil" <mailer.umicbrasil@gmail.com>',
-  to: "roginaldosemog@gmail.com",
-  subject: `COMIC 2021 | Pedido`,
-  text: `Pedido ae`,
-  html: "<b>Aloi</b>",
-};
-
 module.exports = {
-  async send(request, response) {
-    const info = await transporter.sendMail(mail)
-    .catch(() => {
+  async new_order(request, response) {
+    const order = request.body;
+    const mail = MailService.getNewOrderMail(order);
+
+    const info = await transporter.sendMail(mail).catch(() => {
       return response.status(412).json({ msg: "Wrong data." });
     });
 
