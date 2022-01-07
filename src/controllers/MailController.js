@@ -27,12 +27,13 @@ module.exports = {
     const order = request.body;
     const mail = MailService.getConfirmOrderMail(order);
 
-    const info = await transporter.sendMail(mail).catch(() => {
+    const info = await transporter.sendMail(mail).catch((e) => {
       console.log("Erro no pedido " + order.id_string);
+      console.log(e);
       return response.status(412).json({ msg: "Wrong data." });
     });
 
-    console.log(info);
+    //console.log(info);
     return response.json(info);
   },
 };
